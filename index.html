@@ -1,23 +1,115 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Campaña informativa simulada para demostrar cómo se puede estructurar una página web con contenido relevante."
+      content="Rick Sanchez para Presidente de la Ciudadela — Campaña presidencial interdimensional."
     />
     <link rel="stylesheet" href="./src/styles/styles.css" />
-    <title>Campaña informativa simulada</title>
+    <title>Rick Sanchez — Presidente de la Ciudadela</title>
   </head>
   <body>
-    <h1>Campaña informativa simulada</h1>
-    <p>
-      Esta es una campaña informativa simulada para demostrar cómo se puede
-      estructurar una página web con contenido relevante. Aquí puedes incluir
-      información sobre tu campaña, objetivos, y cualquier otro detalle que
-      quieras compartir con tu audiencia.
-    </p>
-    <script src="./src/scripts/scripts.js"></script>
+    <!-- Nav buttons -->
+    <nav class="topnav" aria-label="Configuración">
+      <button class="topnav__btn" id="lang-btn" type="button" title="Cambiar idioma">
+        🌐 EN
+      </button>
+      <button class="topnav__btn" id="theme-btn" type="button" title="Cambiar tema">
+        ☀️
+      </button>
+    </nav>
+
+    <!-- Hero -->
+    <header class="hero">
+      <div class="hero__particles" aria-hidden="true"></div>
+      <div class="hero__content">
+        <div class="hero__avatar">
+          <!-- TODO: Reemplaza src con la imagen real de Rick -->
+          <img
+            src="https://placehold.co/280x280/97ce4c/1a1a2e?text=Rick"
+            draggable="false"
+            alt="Rick Sanchez avatar"
+            class="hero__img"
+          />
+        </div>
+        <h1 class="hero__name">Rick Sanchez</h1>
+        <p class="hero__subtitle" data-i18n="hero.subtitle">Candidato a Presidente de la Ciudadela</p>
+        <p class="hero__slogan" data-i18n="hero.slogan">
+          "Wubba Lubba Dub Dub — Porque la democracia es solo una ilusión, pero al menos conmigo será divertido."
+        </p>
+      </div>
+    </header>
+
+    <!-- Sobre mí -->
+    <section class="about" id="about">
+      <h2 class="section__title" data-i18n="about.title">Sobre mí</h2>
+      <p class="about__text" data-i18n="about.text">
+        Soy el científico más inteligente del multiverso — y no, eso no es un eslogan, es un hecho verificable en la dimensión C-137.
+        He derrotado gobiernos galácticos, escapado de prisiones interdimensionales y convertido a un ser humano en pepino
+        (por razones terapéuticas, obviamente). Si puedo hackear la realidad misma, puedo manejar un gobierno. 
+        ¿Políticos corruptos? Los convierto en Cronenbergs. ¿Burocracia? La portal-guneo a otra dimensión.
+        ¿Mi calificación? Un IQ que haría llorar a tu calculadora.
+      </p>
+    </section>
+
+    <!-- Propuestas -->
+    <section class="proposals" id="proposals">
+      <h2 class="section__title" data-i18n="proposals.title">Mis Propuestas</h2>
+      <div class="proposals__grid">
+        <article class="proposal-card">
+          <span class="proposal-card__icon">🧪</span>
+          <h3 class="proposal-card__title" data-i18n="proposals.items.0.title">Ciencia para todos</h3>
+          <p class="proposal-card__text" data-i18n="proposals.items.0.text">
+            Portal gun subsidiada para cada ciudadano. Vacaciones interdimensionales gratis.
+            ¿Playa? Pff. Prueba una playa en una dimensión donde la arena es pizza.
+          </p>
+        </article>
+
+        <article class="proposal-card">
+          <span class="proposal-card__icon">🛡️</span>
+          <h3 class="proposal-card__title" data-i18n="proposals.items.1.title">Seguridad interdimensional</h3>
+          <p class="proposal-card__text" data-i18n="proposals.items.1.text">
+            Escudo de plasma alrededor de la Ciudadela. Ningún Consejo de Ricks incompetente,
+            ninguna Federación Galáctica, ningún Jerry podrá amenazarnos de nuevo.
+          </p>
+        </article>
+
+        <article class="proposal-card">
+          <span class="proposal-card__icon">🍺</span>
+          <h3 class="proposal-card__title" data-i18n="proposals.items.2.title">Economía del Kalaxian</h3>
+          <p class="proposal-card__text" data-i18n="proposals.items.2.text">
+            Cristales Kalaxianos regulados y accesibles. Impuestos cero en Szechuan Sauce.
+            La economía fluirá como el alcohol en mi petaca.
+          </p>
+        </article>
+
+        <article class="proposal-card">
+          <span class="proposal-card__icon">🧬</span>
+          <h3 class="proposal-card__title" data-i18n="proposals.items.3.title">Salud universal mejorada</h3>
+          <p class="proposal-card__text" data-i18n="proposals.items.3.text">
+            Clonación gratuita. ¿Te moriste? No hay problema, tenemos backup.
+            Operaciones con nanobots y suero anti-envejecimiento para quien lo pida.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta" id="cta">
+      <button class="cta__button" id="rick-btn" type="button" data-i18n="cta">
+        🗳️ Vota por Rick
+      </button>
+    </section>
+
+    <!-- Toast -->
+    <div class="toast" id="toast" aria-live="polite"></div>
+
+    <footer class="footer">
+      <p data-i18n="footer">© Dimensión C-137 · Rick Sanchez 2026 · "No me importa tu opinión, pero vota."</p>
+    </footer>
+
+    <script type="module" src="./src/scripts/scripts.js"></script>
   </body>
 </html>
