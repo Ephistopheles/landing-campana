@@ -21,7 +21,7 @@ An over-the-top fake campaign website where Rick Sanchez runs for President of t
   4. Full page corruption → permanent "nuke" screen stored in localStorage
 - **Language toggle** (ES/EN) with insults delivered in the new language
 - **Nuked state** referencing the Omega Device from the series — shows a live variant elimination counter, dimension purge log, and a final incomprehensible number (ℵ₀×∞)
-- **Custom scrollbar**, responsive design, Twemoji SVG icons, favicon management
+- **Custom scrollbar**, responsive design, SVG icons, favicon management
 
 ---
 
@@ -47,7 +47,7 @@ src/
     en.js               # English translations
   assets/
     avatars/            # Rick avatar
-    icons/              # Twemoji SVGs (skull, globe, test-tube, etc.)
+    icons/              # SVGs (skull, globe, test-tube, etc.)
 ```
 
 ---
