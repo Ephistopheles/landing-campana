@@ -1,5 +1,371 @@
-* {
+/* ── Reset & base ──────────────────────────────── */
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  user-select: none;
+}
+
+:root {
+  /* Rick & Morty palette */
+  --portal-green: #97ce4c;
+  --portal-cyan: #44c8f5;
+  --dark-bg: #1a1a2e;
+  --darker-bg: #12121c;
+  --card-bg: #222240;
+  --text-primary: #e8e8e8;
+  --text-muted: #a0a0b8;
+  --accent-pink: #e040a0;
+  --accent-yellow: #f5e642;
+  --portal-glow: rgba(151, 206, 76, 0.35);
+  --cyan-glow: rgba(68, 200, 245, 0.3);
+
+  --font-main: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --radius: 16px;
+  --transition: 0.3s ease;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-main);
+  background: var(--dark-bg);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar (all browsers) ──────────────────── */
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--darker-bg);
+}
+
+body::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--portal-green), var(--portal-cyan));
+  border-radius: 8px;
+  border: 2px solid var(--darker-bg);
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--portal-cyan), var(--portal-green));
+}
+
+/* Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--portal-green) var(--darker-bg);
+}
+
+/* ── Top nav ───────────────────────────────────── */
+.topnav {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 900;
+  animation: fadeUp 1s ease-out both;
+}
+
+.topnav__btn {
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: rgba(34, 34, 64, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(151, 206, 76, 0.25);
+  border-radius: 50px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition),
+    transform var(--transition), box-shadow var(--transition);
+}
+
+.topnav__btn:hover {
+  background: rgba(151, 206, 76, 0.15);
+  border-color: var(--portal-green);
+  transform: scale(1.05);
+  box-shadow: 0 0 16px var(--portal-glow);
+}
+
+.topnav__btn:active {
+  transform: scale(0.95);
+}
+
+/* ── Utilities ─────────────────────────────────── */
+.section__title {
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--portal-green);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* ── Hero ──────────────────────────────────────── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at 50% 40%, #1e3a1a 0%, var(--dark-bg) 70%);
+  overflow: hidden;
+  padding: 2rem 1rem;
+}
+
+.hero__particles {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, var(--portal-green) 50%, transparent 100%),
+    radial-gradient(2px 2px at 70% 60%, var(--portal-cyan) 50%, transparent 100%),
+    radial-gradient(1px 1px at 40% 80%, var(--accent-yellow) 50%, transparent 100%),
+    radial-gradient(1px 1px at 80% 20%, var(--accent-pink) 50%, transparent 100%);
+  background-size: 200px 200px;
+  animation: drift 20s linear infinite;
+  opacity: 0.5;
+}
+
+@keyframes drift {
+  to { background-position: 200px 200px; }
+}
+
+.hero__content {
+  position: relative;
+  text-align: center;
+  animation: fadeUp 1s ease-out both;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero__avatar {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 1.5rem;
+  border-radius: 50%;
+  border: 4px solid var(--portal-green);
+  box-shadow: 0 0 40px var(--portal-glow), 0 0 80px var(--portal-glow);
+  overflow: hidden;
+  animation: pulseGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes pulseGlow {
+  from { box-shadow: 0 0 30px var(--portal-glow), 0 0 60px var(--portal-glow); }
+  to   { box-shadow: 0 0 50px var(--portal-glow), 0 0 100px rgba(68, 200, 245, 0.2); }
+}
+
+.hero__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hero__name {
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-weight: 900;
+  color: var(--portal-green);
+  text-shadow: 0 0 20px var(--portal-glow);
+  letter-spacing: 3px;
+}
+
+.hero__subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  color: var(--portal-cyan);
+  margin-top: 0.25rem;
+  letter-spacing: 1px;
+}
+
+.hero__slogan {
+  max-width: 600px;
+  margin: 1.5rem auto 0;
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  font-style: italic;
+  color: var(--accent-yellow);
+  line-height: 1.7;
+}
+
+/* ── About ─────────────────────────────────────── */
+.about {
+  padding: 5rem 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+  animation: fadeUp 0.8s ease-out both;
+}
+
+.about__text {
+  font-size: clamp(1rem, 2vw, 1.1rem);
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.9;
+}
+
+/* ── Proposals ─────────────────────────────────── */
+.proposals {
+  padding: 4rem 1.5rem 5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.proposals__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.proposal-card {
+  background: var(--card-bg);
+  border: 1px solid rgba(151, 206, 76, 0.15);
+  border-radius: var(--radius);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+
+.proposal-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--portal-green);
+  box-shadow: 0 12px 40px var(--portal-glow);
+}
+
+.proposal-card__icon {
+  font-size: 2.8rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.proposal-card__title {
+  font-size: 1.2rem;
+  color: var(--portal-cyan);
+  margin-bottom: 0.75rem;
+}
+
+.proposal-card__text {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ── CTA ───────────────────────────────────────── */
+.cta {
+  text-align: center;
+  padding: 2rem 1.5rem 5rem;
+}
+
+.cta__button {
+  font-family: var(--font-main);
+  font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+  font-weight: 700;
+  color: var(--darker-bg);
+  background: linear-gradient(135deg, var(--portal-green), var(--portal-cyan));
+  border: none;
+  border-radius: 50px;
+  padding: 1rem 3rem;
+  cursor: pointer;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.cta__button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, 0.25) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.cta__button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px var(--portal-glow), 0 0 60px var(--cyan-glow);
+}
+
+.cta__button:hover::after {
+  transform: translateX(100%);
+}
+
+.cta__button:active {
+  transform: scale(0.97);
+}
+
+/* ── Toast ─────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  background: var(--card-bg);
+  color: var(--accent-yellow);
+  border: 1px solid var(--portal-green);
+  border-radius: var(--radius);
+  padding: 1rem 2rem;
+  max-width: 90vw;
+  width: max-content;
+  font-size: 1rem;
+  font-style: italic;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px var(--portal-glow);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+  z-index: 1000;
+}
+
+.toast--visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+/* ── Footer ────────────────────────────────────── */
+.footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: var(--darker-bg);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  border-top: 1px solid rgba(151, 206, 76, 0.1);
+}
+
+/* ── Responsive ────────────────────────────────── */
+@media (max-width: 600px) {
+  .hero__avatar {
+    width: 150px;
+    height: 150px;
+  }
+
+  .proposals__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cta__button {
+    padding: 0.9rem 2rem;
+  }
+
+  .toast {
+    max-width: 92vw;
+    font-size: 0.9rem;
+    padding: 0.85rem 1.25rem;
+  }
 }
