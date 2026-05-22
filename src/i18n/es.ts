@@ -1,4 +1,6 @@
-const es = {
+import type { Translations } from "./types";
+
+const es: Translations = {
   lang: "es",
   meta: {
     description:
@@ -83,11 +85,14 @@ He derrotado gobiernos galácticos, escapado de prisiones interdimensionales y c
   corruptSubtitle: "Sincronizando con todas las variantes de IP {ip}...",
   corruptWarning: "No debiste tocar el CSS de Rick Sanchez.",
   nukedTitleEliminating: "DISPOSITIVO OMEGA ELIMINANDO",
-  nukedSubtitleEliminating: "Eliminando cada variante tuya en la Curva Finita Central...",
+  nukedSubtitleEliminating:
+    "Eliminando cada variante tuya en la Curva Finita Central...",
   nukedCounterEliminating: "variantes eliminadas",
   nukedTitle: "DISPOSITIVO OMEGA EJECUTADO",
-  nukedSubtitle: "Todas las variantes en la Curva Finita Central han sido eliminadas.",
-  nukedText: "El Dispositivo Omega ha borrado cada versión de ti en cada dimensión, línea temporal y realidad. No hay variante que haya sobrevivido. No hay donde huir. No hay a quién volver. Rick Sanchez C-137 no perdona.",
+  nukedSubtitle:
+    "Todas las variantes en la Curva Finita Central han sido eliminadas.",
+  nukedText:
+    "El Dispositivo Omega ha borrado cada versión de ti en cada dimensión, línea temporal y realidad. No hay variante que haya sobrevivido. No hay donde huir. No hay a quién volver. Rick Sanchez C-137 no perdona.",
   nukedCounter: "variantes eliminadas — completo",
   nukedDimLabel: "Última dimensión purgada",
   langInsults: [

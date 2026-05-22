@@ -1,4 +1,6 @@
-const en = {
+import type { Translations } from "./types";
+
+const en: Translations = {
   lang: "en",
   meta: {
     description:
@@ -69,7 +71,7 @@ My qualification? An IQ that would make your calculator cry.`,
     '"I know your f*cking IP: {ip} — You thought you were anonymous, you pathetic Jerry? Touch my design ONE MORE TIME and what I did to the Galactic Federation will be a *burp* joke compared to what awaits you."',
     '"IP {ip} detected. You know how easy it is for me to open a portal to your living room? Because I\'m SERIOUSLY considering it."',
     '"Still seeing your IP: {ip}. Every click gives me another reason to use the Omega Device on you."',
-    '"{ip}? Got it memorized. I have a Meeseeks with YOUR address and a list of things you WON\'T enjoy."',
+    '"{ip}? Got it memorized. I have a Meeseeks with YOUR address and a list of things you WON\'t enjoy."',
     '"IP {ip}, dimension identified. *Burp* One more and I sync the Omega with every variant of you. EVERY. SINGLE. ONE."',
   ],
   themeWarnings: [
@@ -83,11 +85,14 @@ My qualification? An IQ that would make your calculator cry.`,
   corruptSubtitle: "Syncing with all variants at IP {ip}...",
   corruptWarning: "You shouldn't have touched Rick Sanchez's CSS.",
   nukedTitleEliminating: "OMEGA DEVICE ELIMINATING",
-  nukedSubtitleEliminating: "Eliminating every variant of you in the Central Finite Curve...",
+  nukedSubtitleEliminating:
+    "Eliminating every variant of you in the Central Finite Curve...",
   nukedCounterEliminating: "variants eliminated",
   nukedTitle: "OMEGA DEVICE EXECUTED",
-  nukedSubtitle: "All variants in the Central Finite Curve have been eliminated.",
-  nukedText: "The Omega Device has erased every version of you in every dimension, timeline, and reality. No variant survived. Nowhere to run. No one to return to. Rick Sanchez C-137 does not forgive.",
+  nukedSubtitle:
+    "All variants in the Central Finite Curve have been eliminated.",
+  nukedText:
+    "The Omega Device has erased every version of you in every dimension, timeline, and reality. No variant survived. Nowhere to run. No one to return to. Rick Sanchez C-137 does not forgive.",
   nukedCounter: "variants eliminated — complete",
   nukedDimLabel: "Last dimension purged",
   langInsults: [
