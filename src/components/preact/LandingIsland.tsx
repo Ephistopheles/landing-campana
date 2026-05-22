@@ -1,12 +1,12 @@
-import { useRef, useCallback } from "preact/hooks";
+import { useRef, useCallback, useEffect } from "preact/hooks";
 import { useSignal, useComputed } from "@preact/signals";
 import { currentLang, t, getFooterText } from "../../stores/lang";
-import { useShuffleBag } from "../../hooks/useShuffleBag";
+import { useGameApi } from "../../hooks/useGameApi";
+import type { Translations } from "../../i18n/types";
 import Toast from "./Toast";
 import CorruptionOverlay from "./CorruptionOverlay";
 import NukedScreen from "./NukedScreen";
 
-// Icon imports as URLs for public assets
 import languageIcon from "../../assets/icons/language.svg";
 import sunIcon from "../../assets/icons/sun.svg";
 import ballotBoxIcon from "../../assets/icons/ballot-box.svg";
@@ -18,31 +18,41 @@ import dnaIcon from "../../assets/icons/dna.svg";
 
 const proposalIcons = [testTubeIcon, shieldIcon, beerMugIcon, dnaIcon];
 
-function pixelateIP(ip: string): string {
-  const parts = ip.split(".");
-  if (parts.length === 4) {
-    return `${parts[0]}.███.███.${parts[3]}`;
+function getMessageByKey(tr: Translations, key: string, index: number): string {
+  const collection = tr[key as keyof Translations];
+  if (Array.isArray(collection)) {
+    return (collection as string[])[index] ?? "";
   }
-  return ip.slice(0, 3) + "█".repeat(ip.length - 5) + ip.slice(-2);
+  return "";
 }
 
 export default function LandingIsland() {
   const toastMessage = useSignal("");
   const toastVisible = useSignal(false);
-  const themeClicks = useRef(0);
-  const userIP = useRef<string | null>(null);
   const hideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const showCorruption = useSignal(false);
   const corruptionIP = useSignal("");
-  const isNuked = useSignal(
-    typeof localStorage !== "undefined" &&
-      localStorage.getItem("rick-nuked") === "true"
-  );
+  const isNuked = useSignal(false);
+  const sessionLoaded = useSignal(false);
 
-  const { getFromBag, resetBag } = useShuffleBag();
+  const api = useGameApi();
 
   const trans = useComputed(() => t());
   const footer = useComputed(() => getFooterText());
+
+  // Check session state on mount
+  useEffect(() => {
+    api.getSession().then((session) => {
+      isNuked.value = session.isNuked;
+      sessionLoaded.value = true;
+    }).catch(() => {
+      // Fallback to localStorage if backend is unreachable
+      isNuked.value =
+        typeof localStorage !== "undefined" &&
+        localStorage.getItem("rick-nuked") === "true";
+      sessionLoaded.value = true;
+    });
+  }, []);
 
   const showToast = useCallback(
     (message: string, duration = 5000) => {
@@ -56,83 +66,95 @@ export default function LandingIsland() {
     [toastMessage, toastVisible]
   );
 
-  const fetchIP = useCallback(async (): Promise<string> => {
-    if (userIP.current) return userIP.current;
+  const handleVote = useCallback(async () => {
     try {
-      const res = await fetch("https://api.ipify.org?format=json");
-      const data = await res.json();
-      userIP.current = data.ip;
+      const { key, index } = await api.vote();
+      const tr = t();
+      const message = getMessageByKey(tr, key, index);
+      showToast(message);
     } catch {
-      userIP.current = "192.168.X.X";
+      // Silent fallback
     }
-    return userIP.current!;
-  }, []);
-
-  const handleVote = useCallback(() => {
-    const tr = t();
-    showToast(getFromBag("vote", tr.voteQuotes));
-  }, [getFromBag, showToast]);
+  }, [api, showToast]);
 
   const handleTheme = useCallback(async () => {
-    themeClicks.current++;
-    const clicks = themeClicks.current;
-    const tr = t();
+    try {
+      const result = await api.themeClick();
+      const tr = t();
 
-    if (clicks <= 5) {
-      showToast(getFromBag("themeInsult", tr.themeInsults));
-    } else if (clicks <= 10) {
-      const ip = await fetchIP();
-      const pixelated = pixelateIP(ip);
-      const threat = getFromBag("themeThreat", tr.themeThreats).replace(
-        "{ip}",
-        pixelated
-      );
-      showToast(threat, 7000);
-    } else if (clicks <= 15) {
-      showToast(getFromBag("themeWarning", tr.themeWarnings), 6000);
-    } else {
-      const ip = await fetchIP();
-      toastVisible.value = false;
-      corruptionIP.value = ip;
-      showCorruption.value = true;
+      switch (result.phase) {
+        case "insult": {
+          const message = getMessageByKey(tr, result.key!, result.index!);
+          showToast(message);
+          break;
+        }
+        case "threat": {
+          const message = getMessageByKey(tr, result.key!, result.index!).replace(
+            "{ip}",
+            result.pixelatedIp ?? ""
+          );
+          showToast(message, 7000);
+          break;
+        }
+        case "warning": {
+          const message = getMessageByKey(tr, result.key!, result.index!);
+          showToast(message, 6000);
+          break;
+        }
+        case "corrupt": {
+          toastVisible.value = false;
+          corruptionIP.value = result.ip ?? "";
+          showCorruption.value = true;
 
-      // Update favicon
-      const link = document.querySelector(
-        "link[rel='icon']"
-      ) as HTMLLinkElement | null;
-      if (link) link.href = "/icons/globe-broken.svg";
-      document.title = tr.corruptTitle;
+          const link = document.querySelector(
+            "link[rel='icon']"
+          ) as HTMLLinkElement | null;
+          if (link) link.href = "/icons/globe-broken.svg";
+          document.title = tr.corruptTitle;
+          break;
+        }
+      }
+    } catch {
+      // Silent fallback
     }
-  }, [fetchIP, getFromBag, showToast, toastVisible, corruptionIP, showCorruption]);
+  }, [api, showToast, toastVisible, corruptionIP, showCorruption]);
 
-  const handleLang = useCallback(() => {
+  const handleLang = useCallback(async () => {
     currentLang.value = currentLang.value === "es" ? "en" : "es";
     document.documentElement.lang = currentLang.value;
-
-    // Reset shuffle bags for new language
-    resetBag("vote");
-    resetBag("themeInsult");
-    resetBag("themeThreat");
-    resetBag("themeWarning");
-    resetBag("langInsult");
 
     const tr = t();
     document.title = tr.meta.title;
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute("content", tr.meta.description);
 
-    showToast(getFromBag("langInsult", tr.langInsults));
-  }, [getFromBag, resetBag, showToast]);
+    try {
+      const { key, index } = await api.langSwitch();
+      const message = getMessageByKey(tr, key, index);
+      showToast(message);
+    } catch {
+      // Silent fallback
+    }
+  }, [api, showToast]);
 
-  const handleCorruptionComplete = useCallback(() => {
-    localStorage.setItem("rick-nuked", "true");
+  const handleCorruptionComplete = useCallback(async () => {
+    try {
+      await api.nuke();
+    } catch {
+      // Persist locally as fallback
+      localStorage.setItem("rick-nuked", "true");
+    }
     showCorruption.value = false;
     isNuked.value = true;
-  }, [showCorruption, isNuked]);
+  }, [api, showCorruption, isNuked]);
 
   const langLabel = useComputed(() =>
     currentLang.value === "es" ? "EN" : "ES"
   );
+
+  if (!sessionLoaded.value) {
+    return null;
+  }
 
   if (isNuked.value) {
     return <NukedScreen />;

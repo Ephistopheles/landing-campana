@@ -1,79 +1,150 @@
-# Rick Sanchez — Presidential Campaign Landing Page
+# Landing Rick — Frontend
 
-> **This is a parody project.** It is not affiliated with, endorsed by, or connected to Adult Swim, Cartoon Network, or any official Rick and Morty property. This is a fan-made, non-commercial project created purely for entertainment and educational purposes.
+Astro + Preact + TypeScript frontend for the Rick Sanchez interdimensional presidential campaign landing page.
 
-A fully interactive presidential campaign landing page for Rick Sanchez (from *Rick and Morty*), built as a front-end exercise in vanilla HTML, CSS, and JavaScript — no frameworks, no build tools.
+> **Parody project.** Not affiliated with Adult Swim, Cartoon Network, or any Rick and Morty property. Fan-made, non-commercial, for entertainment and educational purposes.
 
 ---
 
-## 🧪 What Is This?
+## What Is This?
 
-An over-the-top fake campaign website where Rick Sanchez runs for President of the Citadel. The page features:
+An over-the-top fake campaign website where Rick Sanchez runs for President of the Citadel. Features:
 
 - **Hero section** with animated avatar, portal-green palette, and particle background
 - **About section** with Rick's "qualifications"
 - **4 proposal cards** with SVG icons (science, security, economy, healthcare)
-- **Vote button** that shows sarcastic Rick quotes (shuffle bag — no repeats)
+- **Vote button** — sarcastic Rick quotes via shuffle bag (no repeats until pool exhausted)
 - **Theme toggle** with a 4-phase escalation system:
-  1. Sarcastic insults
-  2. IP-based threats (fetched via ipify API, pixelated for display)
-  3. Angry warnings referencing the Omega Device
-  4. Full page corruption → permanent "nuke" screen stored in localStorage
-- **Language toggle** (ES/EN) with insults delivered in the new language
-- **Nuked state** referencing the Omega Device from the series — shows a live variant elimination counter, dimension purge log, and a final incomprehensible number (ℵ₀×∞)
-- **Custom scrollbar**, responsive design, SVG icons, favicon management
+  1. Sarcastic insults (clicks 1–5)
+  2. IP-based threats with pixelated IP display (clicks 6–10)
+  3. Angry warnings referencing the Omega Device (clicks 11–15)
+  4. Full page corruption (clicks 16+)
+- **Omega Device (nuke)** — permanent session state, live variant elimination counter, dimension purge log
+- **Language toggle** (ES/EN) — insults delivered in the newly selected language
+- **Responsive design**, custom scrollbar, SVG icons, favicon
 
 ---
 
-## 🏗️ How It Was Built
+## Tech Stack
 
-Built entirely with **vanilla technologies** — no frameworks, no bundlers:
+- **Astro 6** — static site framework, islands architecture
+- **Preact 10 + @preact/signals** — reactive client islands
+- **TypeScript** — strict mode throughout
+- **Native fetch** — communicates with the NestJS backend (`credentials: "include"` for cookies)
+- **CSS custom properties** — Rick & Morty palette, animations (glitch, scanlines, flicker, static noise)
 
-- **HTML5** — Semantic structure with `data-i18n` attributes for internationalization
-- **CSS3** — Custom properties (Rick & Morty palette), `clamp()` for fluid typography, keyframe animations (glitch, scanlines, static noise, flicker), custom scrollbars (webkit + Firefox)
-- **JavaScript (ES Modules)** — `import`/`export` for i18n files, shuffle bag pattern for non-repeating randomization, `Temporal` API with `Date` fallback for dynamic year, `fetch` for IP retrieval, `localStorage` for persistent nuke state
+---
 
-### Project Structure
+## Requirements
+
+- Node.js ≥ 20
+- npm ≥ 10
+- The [landingrick-back](../landingrick-back) backend running
+
+---
+
+## Getting Started
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Configure environment
+
+Copy `.env.example` to `.env` and fill in the value:
+
+```bash
+cp .env.example .env
+```
+
+```env
+# Full base URL of the backend API (no trailing slash, must include /api)
+PUBLIC_API_URL=http://localhost:3001/api
+```
+
+> **Never commit `.env`** — it is already in `.gitignore`.
+
+### 3. Start the backend
+
+Before running the frontend, make sure the backend is running. See [landingrick-back/README.md](../landingrick-back/README.md).
+
+### 4. Run in development
+
+```bash
+npm run dev
+```
+
+The site will be available at `http://localhost:4321`.
+
+### 5. Build for production
+
+```bash
+npm run build
+```
+
+Output goes to `dist/`. Serve it with any static file server or CDN.
+
+---
+
+## Project Structure
 
 ```
-index.html
 src/
-  scripts/
-    scripts.js          # All app logic (i18n, toasts, escalation, corruption, nuke)
-  styles/
-    styles.css          # Full styling (~750 lines)
+  pages/
+    index.astro              # Entry point — mounts the Preact island
+  layouts/
+    Layout.astro             # Base HTML layout (meta, fonts, global CSS)
+  components/
+    preact/
+      LandingIsland.tsx      # Main interactive island (session, vote, escalation)
+      Toast.tsx              # Notification toast component
+      CorruptionOverlay.tsx  # Corruption phase overlay
+      NukedScreen.tsx        # Omega Device final screen
+  hooks/
+    useGameApi.ts            # Typed fetch wrappers for all backend endpoints
+  stores/
+    lang.ts                  # Signal-based language store with t() helper
   i18n/
-    es.js               # Spanish translations
-    en.js               # English translations
-  assets/
-    avatars/            # Rick avatar
-    icons/              # SVGs (skull, globe, test-tube, etc.)
+    en.ts                    # English translations
+    es.ts                    # Spanish translations
+    types.ts                 # Shared translation types
+    index.ts                 # Re-exports
+  styles/
+    global.css               # All styles (animations, corruption, nuked screens)
+public/
+  favicon.svg
+  icons/                     # SVG icons used by the landing
 ```
 
 ---
 
-## 📺 Credits
+## Available Scripts
 
-**Rick and Morty** was created by **Justin Roiland** and **Dan Harmon**. The series is produced by Starburns Industries and airs on Adult Swim (Cartoon Network). All characters, references, and lore belong to their respective owners.
-
----
-
-## 🔗 Related Technologies
-
-- [Vanilla JS](http://vanilla-js.com/)
-- [ipify API](https://www.ipify.org/)
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Start development server with HMR |
+| `npm run build` | Build static output to `dist/` |
+| `npm run preview` | Preview the production build locally |
 
 ---
 
-## 👤 Author
+## Credits
+
+**Rick and Morty** was created by **Justin Roiland** and **Dan Harmon**. Produced by Starburns Industries, airs on Adult Swim (Cartoon Network). All characters, references, and lore belong to their respective owners.
+
+---
+
+## Author
 
 **Johan Amed**  
-GitHub: https://github.com/Ephistopheles
+GitHub: [Ephistopheles](https://github.com/Ephistopheles)  
 Email: [rjohanamed@gmail.com](mailto:rjohanamed@gmail.com)
 
 ---
 
-## 📄 License
+## License
 
-This project is licensed under the MIT License.
-You are free to use, modify, and distribute it.
+MIT
+
